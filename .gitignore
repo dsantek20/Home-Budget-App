@@ -1,0 +1,58 @@
+# Python specific
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.so
+*.dylib
+*.egg-info
+dist
+build
+eggs
+*.egg
+*.log
+
+# Virtual environment
+venv/
+.venv/
+
+# Environment files
+.env
+
+# PyCharm specific
+.idea/
+
+# VS Code specific
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+
+# FastAPI specific
+*.db
+*.sqlite
+*.sqlite3
+
+# Docker related
+*.dockerfile
+docker-compose.override.yml
+*.log
+
+# Testing related
+*.coverage
+*.hypothesis
+nosetests.xml
+coverage.xml
+*.cover
+
+# Pytest cache
+.cache/
+
+# Type hints cache
+mypy_cache/
+
+# FastAPI-generated API docs
+docs/.openapi/
+
+# OS generated files
+.DS_Store
+Thumbs.db
