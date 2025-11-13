@@ -32,7 +32,17 @@ To set up the environment configuration for **development**, follow these steps:
 
 4. (Optional) Adjust values in the `.env` file if needed
 
-### Docker Setup
+### 4. Database 
+
+Project requires PostgreSQL for data storage.
+
+**Option A: Use existing PostgreSQL installation**
+If you already have PostgreSQL installed and running on your system, you can use it directly.
+
+**Option B: Use Docker (recommended)**
+If you don't have PostgreSQL installed, or prefer an isolated environment, use Docker:
+
+#### Docker Setup
 To set up the database, execute the following command:
 
 `docker-compose -f deploy/local/db-docker-compose.yml up -d`
