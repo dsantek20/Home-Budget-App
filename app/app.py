@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 import logging
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
+from api.routes.auth_router import auth_router
 from app_config import get_app_config
 from common.logger import initialize_logging
 from error_handling.error_handling import ApplicationException, application_exception_handler, exception_handler, http_exception_handler, runtime_error_handler, validation_exception_handler
@@ -31,8 +32,6 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, exception_handler)
 app.add_exception_handler(RuntimeError, runtime_error_handler)
 
+app.include_router(auth_router, prefix="/auth", tags=["AUTH"])
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
 
