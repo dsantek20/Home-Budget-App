@@ -12,6 +12,7 @@ class AppConfiguration(BaseSettings):
     debug: bool = False
     log_file_path: str
     log_file_name: str
+    database_url: str
 
     class Config:
         file = f".env"

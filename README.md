@@ -31,3 +31,11 @@ To set up the environment configuration for **development**, follow these steps:
 3. The default configuration is already set up for local development
 
 4. (Optional) Adjust values in the `.env` file if needed
+
+### Docker Setup
+To set up the database, execute the following command:
+
+`docker-compose -f deploy/local/db-docker-compose.yml up -d`
+
+This starts:
+  * PostgreSQL database (port 5444)
