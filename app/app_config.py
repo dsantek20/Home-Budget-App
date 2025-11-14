@@ -14,6 +14,9 @@ class AppConfiguration(BaseSettings):
     log_file_name: str
     database_url: str
     alembic_database_url: str
+    jwt_secret_key: str
+    jwt_algorithm: str
+    jwt_expiration_hours: int
 
     class Config:
         file = f".env"
