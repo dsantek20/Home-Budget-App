@@ -25,3 +25,7 @@ class CategoryRequest(CategoryBase):
             ]
         }
     )
+
+class CategoryUpdate(BaseApiModel):
+    name: Optional[str] = None
+    description: Optional[str] = None

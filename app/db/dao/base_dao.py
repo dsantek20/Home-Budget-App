@@ -37,3 +37,18 @@ class BaseDAO:
         obj = model(**kwargs)
         await obj.save(self.session)
         return obj
+    
+    async def update(self, model: Type[T], id: uuid.UUID, update_obj) -> Optional[T]:
+        obj = await self.get_by_id(model, id)
+        
+        if not obj:
+            return None
+        
+        update_data = update_obj.model_dump(exclude_unset=True)
+        
+        for key, value in update_data.items():
+            if hasattr(obj, key):
+                setattr(obj, key, value)
+        
+        await obj.update(self.session)
+        return obj

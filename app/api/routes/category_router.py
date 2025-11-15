@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from uuid import UUID
-from api.models.category_models import CategoryGet, CategoryRequest
+from api.models.category_models import CategoryGet, CategoryRequest, CategoryUpdate
 from services.category_service import CategoryServiceInstance
 from auth.dependencies import CurrentUser, get_current_user
 
@@ -28,3 +28,7 @@ async def get_category_by_id(category_id: UUID, service: CategoryServiceInstance
 @category_router.post("/", response_model=CategoryGet)
 async def create_new_category(current_user: CurrentUser, request: CategoryRequest, service: CategoryServiceInstance):
     return await service.create_new_category(current_user, request)
+
+@category_router.patch("/{category_id}", response_model=CategoryGet)
+async def update_category(category_id: UUID, request: CategoryUpdate, service: CategoryServiceInstance):
+    return await service.update_category(category_id, request)

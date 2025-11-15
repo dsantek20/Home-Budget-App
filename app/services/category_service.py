@@ -2,7 +2,7 @@
 from typing import Annotated, List
 from uuid import UUID
 from fastapi import Depends
-from api.models.category_models import CategoryGet, CategoryRequest
+from api.models.category_models import CategoryGet, CategoryRequest, CategoryUpdate
 from api.models.auth_models import UserGet
 from db.entities.category_entities import Category
 from db.dao.category_dao import CategoryDao, CategoryDaoInstance
@@ -29,6 +29,10 @@ class CategoryService:
         request.is_predefined = False
         category = await self.dao.create(Category, **request.model_dump())
         return CategoryGet.model_validate(category)
+    
+    async def update_category(self, category_id: UUID, request: CategoryUpdate) -> CategoryGet:
+        category_updated = await self.dao.update(Category, category_id, request)
+        return CategoryGet.model_validate(category_updated)
 
 
 def get_category_service(dao: CategoryDaoInstance) -> CategoryService:
