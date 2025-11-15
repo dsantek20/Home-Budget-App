@@ -12,3 +12,9 @@ class Category(BaseUUIDModel):
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id", ondelete="CASCADE"), nullable=True)
     user = relationship("User", back_populates="categories", lazy="selectin")
+
+    expenses = relationship(
+        "Expense",
+        back_populates="category",
+        lazy="selectin",
+    )

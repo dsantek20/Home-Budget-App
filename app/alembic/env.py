@@ -4,7 +4,7 @@ from sqlalchemy import pool
 from alembic import context
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.ddl import DropTable
-from db.entities import base_model, user_entities
+from db.entities import base_model, user_entities, category_entities, expense_entities
 from app_config import get_app_config
 
 # this is the Alembic Config object, which provides
