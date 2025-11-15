@@ -1,7 +1,9 @@
 
 from typing import Annotated, List
 from fastapi import Depends
-from api.models.category_models import CategoryGet
+from api.models.category_models import CategoryGet, CategoryRequest
+from api.models.auth_models import UserGet
+from db.entities.category_entities import Category
 from db.dao.category_dao import CategoryDao, CategoryDaoInstance
 
 
@@ -12,6 +14,12 @@ class CategoryService:
     async def get_predefined_categories(self) -> List[CategoryGet]:
         categories = await self.dao.get_predefined_categories()
         return [CategoryGet.model_validate(category) for category in categories]
+    
+    async def create_new_category(self, current_user: UserGet, request: CategoryRequest) -> CategoryGet:
+        request.user_id = current_user.id
+        request.is_predefined = False
+        category = await self.dao.create(Category, **request.model_dump())
+        return CategoryGet.model_validate(category)
 
 
 def get_category_service(dao: CategoryDaoInstance) -> CategoryService:
