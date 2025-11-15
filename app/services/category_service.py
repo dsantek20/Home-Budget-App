@@ -15,6 +15,10 @@ class CategoryService:
         categories = await self.dao.get_predefined_categories()
         return [CategoryGet.model_validate(category) for category in categories]
     
+    async def get_categories(self, current_user: UserGet) -> List[CategoryGet]:
+        categories = await self.dao.get_categories(current_user.id)
+        return [CategoryGet.model_validate(category) for category in categories]
+    
     async def create_new_category(self, current_user: UserGet, request: CategoryRequest) -> CategoryGet:
         request.user_id = current_user.id
         request.is_predefined = False
