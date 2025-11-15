@@ -1,5 +1,6 @@
 
 from typing import Annotated, List
+from uuid import UUID
 from fastapi import Depends
 from api.models.category_models import CategoryGet, CategoryRequest
 from api.models.auth_models import UserGet
@@ -18,6 +19,10 @@ class CategoryService:
     async def get_categories(self, current_user: UserGet) -> List[CategoryGet]:
         categories = await self.dao.get_categories(current_user.id)
         return [CategoryGet.model_validate(category) for category in categories]
+    
+    async def get_category_by_id(self, category_id: UUID) -> CategoryGet:
+        category = await self.dao.get_by_id(Category, category_id)
+        return CategoryGet.model_validate(category)
     
     async def create_new_category(self, current_user: UserGet, request: CategoryRequest) -> CategoryGet:
         request.user_id = current_user.id

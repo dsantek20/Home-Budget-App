@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Depends
+from uuid import UUID
 from api.models.category_models import CategoryGet, CategoryRequest
 from services.category_service import CategoryServiceInstance
 from auth.dependencies import CurrentUser, get_current_user
@@ -19,6 +20,10 @@ async def get_user_custom_categories(current_user: CurrentUser):
 @category_router.get("/", response_model=List[CategoryGet])
 async def get_categories(current_user: CurrentUser, service: CategoryServiceInstance):
     return await service.get_categories(current_user)
+
+@category_router.get("/{category_id}", response_model=CategoryGet)
+async def get_category_by_id(category_id: UUID, service: CategoryServiceInstance):
+    return await service.get_category_by_id(category_id)
 
 @category_router.post("/", response_model=CategoryGet)
 async def create_new_category(current_user: CurrentUser, request: CategoryRequest, service: CategoryServiceInstance):
