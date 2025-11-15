@@ -1,7 +1,7 @@
 
 from typing import Annotated, List
 from uuid import UUID
-from fastapi import Depends
+from fastapi import Depends, Response, status
 from api.models.category_models import CategoryGet, CategoryRequest, CategoryUpdate
 from api.models.auth_models import UserGet
 from db.entities.category_entities import Category
@@ -34,6 +34,9 @@ class CategoryService:
         category_updated = await self.dao.update(Category, category_id, request)
         return CategoryGet.model_validate(category_updated)
 
+    async def delete_category(self, category_id: UUID):
+        await self.dao.delete_by_id(Category, category_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 def get_category_service(dao: CategoryDaoInstance) -> CategoryService:
     return CategoryService(dao)

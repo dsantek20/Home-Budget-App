@@ -32,3 +32,7 @@ async def create_new_category(current_user: CurrentUser, request: CategoryReques
 @category_router.patch("/{category_id}", response_model=CategoryGet)
 async def update_category(category_id: UUID, request: CategoryUpdate, service: CategoryServiceInstance):
     return await service.update_category(category_id, request)
+
+@category_router.delete("/{category_id}")
+async def delete_category(category_id: UUID, service: CategoryServiceInstance):
+    return await service.delete_category(category_id)

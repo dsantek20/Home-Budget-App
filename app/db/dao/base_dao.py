@@ -2,6 +2,7 @@ from typing import Optional, Type, TypeVar
 import uuid
 from sqlalchemy import select
 from fastapi import status
+from utils.datetime_helpers import get_current_datetime
 from error_handling.error_handling import ApplicationException
 from db.entities.base_model import BaseUUIDModel
 
@@ -52,3 +53,20 @@ class BaseDAO:
         
         await obj.update(self.session)
         return obj
+    
+    async def delete_by_id(self, model: Type[T], id: uuid.UUID, force: bool = False) -> None:
+        obj = await self.get_by_id(model, id, include_deleted=True, raise_error=False)
+
+        if obj is None:
+            return
+
+        if force:
+            await self.session.delete(obj)
+            await self.session.commit()
+        else:
+            if obj.deleted_at:
+                return
+
+            obj.deleted_at = get_current_datetime()
+            await self.session.commit()
+    
