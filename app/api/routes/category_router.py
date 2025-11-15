@@ -36,3 +36,7 @@ async def update_category(category_id: UUID, request: CategoryUpdate, service: C
 @category_router.delete("/{category_id}")
 async def delete_category(category_id: UUID, service: CategoryServiceInstance):
     return await service.delete_category(category_id)
+
+@category_router.delete("/{category_id}/permanent")
+async def delete_category_permanently(category_id: UUID, service: CategoryServiceInstance):
+    return await service.delete_category_permanently(category_id)

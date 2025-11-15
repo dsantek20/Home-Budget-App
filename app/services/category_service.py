@@ -37,6 +37,10 @@ class CategoryService:
     async def delete_category(self, category_id: UUID):
         await self.dao.delete_by_id(Category, category_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
+    
+    async def delete_category_permanently(self, category_id: UUID):
+        await self.dao.delete_by_id(Category, category_id, True)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 def get_category_service(dao: CategoryDaoInstance) -> CategoryService:
     return CategoryService(dao)
