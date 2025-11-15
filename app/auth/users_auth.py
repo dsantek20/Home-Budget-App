@@ -25,9 +25,8 @@ def decode_jwt_token(token: str):
     return jwt.decode(token, config.jwt_secret_key, algorithms=[config.jwt_algorithm])
 
 
-def verify_jwt_token(authorization_header: str) -> Dict:
+def verify_jwt_token(token: str) -> Dict:
     try:
-        token = authorization_header.split("Bearer ")[1]  
         payload = decode_jwt_token(token)
 
         email = payload.get("sub")
