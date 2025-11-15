@@ -2,7 +2,9 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
-from db.entities import base_model
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.sql.ddl import DropTable
+from db.entities import base_model, user_entities
 from app_config import get_app_config
 
 # this is the Alembic Config object, which provides
@@ -27,6 +29,10 @@ target_metadata = base_model.Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+@compiles(DropTable)
+def compile_drop_table(element, compiler, **kwargs):
+    return compiler.visit_drop_table(element) + " CASCADE"
 
 
 def run_migrations_offline() -> None:
