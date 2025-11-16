@@ -24,3 +24,13 @@ class ExpenseUpdate(ExpenseBase):
     description: Optional[str] = None
     expense_date: Optional[datetime] = None
     category_id: Optional[uuid.UUID] = None
+
+class ExpenseFilter(BaseApiModel):
+    category_id: Optional[uuid.UUID] = None
+    min_amount: Optional[Decimal] = Field(None, ge=0)
+    max_amount: Optional[Decimal] = Field(None, ge=0)
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    sort_by: Optional[str] = None
+    sort_order: Optional[str] = None
+    limit: Optional[int] = Field(None, ge=1) 
