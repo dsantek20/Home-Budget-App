@@ -1,0 +1,22 @@
+
+from typing import Annotated
+from fastapi import Depends
+from api.models.auth_models import UserGet
+from api.models.expense_models import ExpenseCreate, ExpenseGet
+from db.entities.expense_entities import Expense
+from db.dao.expense_dao import ExpenseDao, ExpenseDaoInstance
+
+
+class ExpenseService:
+    def __init__(self, dao: ExpenseDao):
+        self.dao = dao
+ 
+    async def create_new_expense(self, current_user: UserGet, request: ExpenseCreate) -> ExpenseGet:
+        expense = await self.dao.create(Expense, **request.model_dump(), user_id=current_user.id)
+        return ExpenseGet.model_validate(expense)
+
+def get_expense_service(dao: ExpenseDaoInstance) -> ExpenseService:
+    return ExpenseService(dao)
+
+
+ExpenseServiceInstance = Annotated[ExpenseService, Depends(get_expense_service)]
