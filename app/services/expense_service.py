@@ -1,7 +1,7 @@
 
 from typing import Annotated
 from uuid import UUID
-from fastapi import Depends
+from fastapi import Depends, Response, status
 from api.models.auth_models import UserGet
 from api.models.expense_models import ExpenseCreate, ExpenseGet, ExpenseUpdate
 from db.entities.expense_entities import Expense
@@ -23,6 +23,10 @@ class ExpenseService:
     async def update_expense(self, expense_id: UUID, request: ExpenseUpdate) -> ExpenseGet:
         expense_updated = await self.dao.update(Expense, expense_id, request)
         return ExpenseGet.model_validate(expense_updated)
+    
+    async def delete_expense(self, expense_id: UUID):
+        await self.dao.delete_by_id(Expense, expense_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 def get_expense_service(dao: ExpenseDaoInstance) -> ExpenseService:
