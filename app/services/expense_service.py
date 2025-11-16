@@ -27,6 +27,10 @@ class ExpenseService:
     async def delete_expense(self, expense_id: UUID):
         await self.dao.delete_by_id(Expense, expense_id)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
+    
+    async def delete_expense_permanently(self, expense_id: UUID):
+        await self.dao.delete_by_id(Expense, expense_id, True)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 def get_expense_service(dao: ExpenseDaoInstance) -> ExpenseService:
