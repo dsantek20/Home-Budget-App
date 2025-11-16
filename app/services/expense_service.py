@@ -1,5 +1,6 @@
 
 from typing import Annotated
+from uuid import UUID
 from fastapi import Depends
 from api.models.auth_models import UserGet
 from api.models.expense_models import ExpenseCreate, ExpenseGet
@@ -10,7 +11,11 @@ from db.dao.expense_dao import ExpenseDao, ExpenseDaoInstance
 class ExpenseService:
     def __init__(self, dao: ExpenseDao):
         self.dao = dao
- 
+    
+    async def get_expense_by_id(self, expense_id: UUID) -> ExpenseGet:
+        expense = await self.dao.get_by_id(Expense, expense_id)
+        return ExpenseGet.model_validate(expense)
+    
     async def create_new_expense(self, current_user: UserGet, request: ExpenseCreate) -> ExpenseGet:
         expense = await self.dao.create(Expense, **request.model_dump(), user_id=current_user.id)
         return ExpenseGet.model_validate(expense)
