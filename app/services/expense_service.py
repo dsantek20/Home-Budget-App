@@ -38,15 +38,23 @@ class ExpenseService:
             difference = request.amount - old_amount
             current_user.balance = current_user.balance - difference
             await current_user.update(self.dao.session)
-            
+
         return expense_get
     
-    async def delete_expense(self, expense_id: UUID):
-        await self.dao.delete_by_id(Expense, expense_id)
+    async def delete_expense(self, current_user: User, expense_id: UUID):
+        expense = await self.dao.get_by_id(Expense, expense_id, include_deleted=True, raise_error=False)
+        if expense:
+            current_user.balance = current_user.balance + expense.amount
+            await current_user.update(self.dao.session)
+            await self.dao.delete_expense_by_id(expense)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     
-    async def delete_expense_permanently(self, expense_id: UUID):
-        await self.dao.delete_by_id(Expense, expense_id, True)
+    async def delete_expense_permanently(self, current_user: User, expense_id: UUID):
+        expense = await self.dao.get_by_id(Expense, expense_id, include_deleted=True, raise_error=False)
+        if expense:
+            current_user.balance = current_user.balance + expense.amount
+            await current_user.update(self.dao.session)
+            await self.dao.delete_expense_by_id(expense, True)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

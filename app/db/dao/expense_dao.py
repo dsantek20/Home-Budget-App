@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import Depends
 from sqlalchemy import select, asc, desc
 from api.models.expense_models import ExpenseFilter
+from utils.datetime_helpers import get_current_datetime
 from db.entities.expense_entities import Expense
 from db.dao.base_dao import BaseDAO
 from db.database import DatabaseSession
@@ -49,6 +50,20 @@ class ExpenseDao(BaseDAO):
         
         await expense.update(self.session)
         return expense
+    
+    async def delete_expense_by_id(self, expense: Expense, force: bool = False) -> None:
+        if expense is None:
+            return
+
+        if force:
+            await self.session.delete(expense)
+            await self.session.commit()
+        else:
+            if expense.deleted_at:
+                return
+
+            expense.deleted_at = get_current_datetime()
+            await self.session.commit()
 
 def get_expense_dao(session: DatabaseSession) -> ExpenseDao:
     return ExpenseDao(session)

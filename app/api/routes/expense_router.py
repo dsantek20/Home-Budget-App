@@ -50,9 +50,9 @@ async def update_expense(expense_id: UUID, current_user: CurrentUser, request: E
     return await service.update_expense(current_user, expense_id, request)
 
 @expense_router.delete("/{expense_id}")
-async def delete_expense(expense_id: UUID, service: ExpenseServiceInstance):
-    return await service.delete_expense(expense_id)
+async def delete_expense(expense_id: UUID, current_user: CurrentUser, service: ExpenseServiceInstance):
+    return await service.delete_expense(current_user, expense_id)
 
 @expense_router.delete("/{expense_id}/permanent")
-async def delete_expense_permanently(expense_id: UUID, service: ExpenseServiceInstance):
-    return await service.delete_expense_permanently(expense_id)
+async def delete_expense_permanently(expense_id: UUID, current_user: CurrentUser, service: ExpenseServiceInstance):
+    return await service.delete_expense_permanently(current_user, expense_id)
