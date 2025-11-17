@@ -43,10 +43,6 @@ class CategoryAggregate(BaseApiModel):
     count: int = 0
     transactions: List[TransactionSummary] = Field(default_factory=list)
 
-class Categories(BaseApiModel):
-    category_name: str
-    category_data: CategoryAggregate
-
 class FinancialOverview(BaseApiModel):
     period: str
     total_income: float
