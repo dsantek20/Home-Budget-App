@@ -2,6 +2,7 @@ from decimal import Decimal
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from db.entities.income_entities import Income
 from db.entities.types.category_type import CategoryType
 from db.entities.expense_entities import Expense
 from utils.datetime_helpers import get_current_date, get_past_date
@@ -255,3 +256,64 @@ async def multiple_expenses(db_session, test_user, predefined_categories):
         await db_session.refresh(expense)
     
     return expenses
+
+@pytest_asyncio.fixture
+async def test_income(db_session, test_user, income_categories):
+    income = Income(
+        id=uuid4(),
+        user_id=test_user.id,
+        category_id=income_categories[0].id, 
+        amount=Decimal("3000.00"),
+        description="Monthly salary",
+        income_date=get_current_date()
+    )
+    db_session.add(income)
+    await db_session.commit()
+    await db_session.refresh(income)
+    return income
+
+
+@pytest_asyncio.fixture
+async def multiple_incomes(db_session, test_user, income_categories):
+    incomes = [
+        Income(
+            id=uuid4(),
+            user_id=test_user.id,
+            category_id=income_categories[0].id,  
+            amount=Decimal("3000.00"),
+            description="Monthly salary",
+            income_date=get_past_date(days=5)
+        ),
+        Income(
+            id=uuid4(),
+            user_id=test_user.id,
+            category_id=income_categories[1].id,  
+            amount=Decimal("500.00"),
+            description="Freelance project",
+            income_date=get_past_date(days=3)
+        ),
+        Income(
+            id=uuid4(),
+            user_id=test_user.id,
+            category_id=income_categories[0].id,  
+            amount=Decimal("3000.00"),
+            description="Monthly salary",
+            income_date=get_past_date(days=1)
+        ),
+        Income(
+            id=uuid4(),
+            user_id=test_user.id,
+            category_id=income_categories[2].id,  
+            amount=Decimal("1200.00"),
+            description="Dividends",
+            income_date=get_current_date()
+        ),
+    ]
+    
+    db_session.add_all(incomes)
+    await db_session.commit()
+    
+    for income in incomes:
+        await db_session.refresh(income)
+    
+    return incomes

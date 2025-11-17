@@ -5,6 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from api.routes.auth_router import auth_router
 from api.routes.category_router import category_router
 from api.routes.expense_router import expense_router
+from api.routes.income_router import income_router
 from app_config import get_app_config
 from common.logger import initialize_logging
 from error_handling.error_handling import ApplicationException, application_exception_handler, exception_handler, http_exception_handler, runtime_error_handler, validation_exception_handler
@@ -37,6 +38,7 @@ app.add_exception_handler(RuntimeError, runtime_error_handler)
 app.include_router(auth_router, prefix="/auth", tags=["AUTH"])
 app.include_router(category_router, prefix="/category", tags=["CATEGORY"])
 app.include_router(expense_router, prefix="/expense", tags=["EXPENSE"])
+app.include_router(income_router, prefix="/income", tags=["INCOME"])
 
 
 

@@ -25,3 +25,10 @@ class User(BaseUUIDModel):
         lazy="selectin",
         cascade="all, delete-orphan",
     )
+
+    incomes = relationship(
+        "Income",
+        back_populates="user",
+        lazy="selectin",
+        cascade="all, delete-orphan",
+    )
