@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import UUID
 from fastapi import Depends, status
 from api.models.income_models import IncomeGet, IncomeCreate
 from db.dao.income_dao import IncomeDao, IncomeDaoInstance
@@ -12,6 +13,10 @@ from db.entities.user_entities import User
 class IncomeService:
     def __init__(self, dao: IncomeDao):
         self.dao = dao
+    
+    async def get_income_by_id(self, income_id: UUID) -> IncomeGet:
+        income = await self.dao.get_by_id(Income, income_id)
+        return IncomeGet.model_validate(income)
     
     async def create_new_income(self, current_user: User, request: IncomeCreate) -> IncomeGet:
         category = await self.dao.get_by_id(Category, request.category_id)
