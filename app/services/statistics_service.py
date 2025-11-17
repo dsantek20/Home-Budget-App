@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import Annotated, List, Optional
 from fastapi import Depends
 from api.models.statistics_models import Categories, CategoryAggregate, CategoryBreakdown, ExpenseSummary, FinancialOverview, IncomeSummary, TransactionSummary
+from db.entities.types.statistic_type import PeriodType
 from db.entities.income_entities import Income
 from db.entities.expense_entities import Expense
 from utils.datetime_helpers import get_current_date, get_past_date
@@ -17,17 +18,17 @@ class StatisticsService:
     def __init__(self, dao: StatisticsDao):
         self.dao = dao
 
-    def _get_date_range(self, period: Optional[str] = None) -> Optional[date]:
+    def _get_date_range(self, period: Optional[PeriodType] = None) -> Optional[date]:
         if not period:
             return None
         
-        if period == "week":
+        if period == PeriodType.WEEK.value:
             start_date = get_past_date(days=7)
-        elif period == "month":
+        elif period == PeriodType.MONTH.value:
             start_date = get_past_date(days=30)
-        elif period == "quarter":
+        elif period == PeriodType.QUARTER.value:
             start_date = get_past_date(days=90)
-        elif period == "year":
+        elif period == PeriodType.YEAR.value:
             start_date = get_past_date(days=365)
         else:
             return None
@@ -88,7 +89,7 @@ class StatisticsService:
         categories.sort(key=lambda c: c.total, reverse=True)
         return categories
 
-    async def get_expense_summary(self, user: User, period: Optional[str] = None) -> ExpenseSummary:
+    async def get_expense_summary(self, user: User, period: Optional[PeriodType] = None) -> ExpenseSummary:
         start_date = self._get_date_range(period)
         expenses = await self.dao.get_expenses(user.id, start_date)
         total_spent = sum(exp.amount for exp in expenses)
@@ -106,7 +107,7 @@ class StatisticsService:
             end_date=get_current_date().isoformat()
         )
 
-    async def get_income_summary(self, user: User, period: Optional[str] = None) -> IncomeSummary:
+    async def get_income_summary(self, user: User, period: Optional[PeriodType] = None) -> IncomeSummary:
         start_date = self._get_date_range(period)
         incomes = await self.dao.get_incomes(user.id, start_date)
         total_spent = sum(income.amount for income in incomes)
