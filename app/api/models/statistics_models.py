@@ -29,6 +29,15 @@ class ExpenseSummary(BaseApiModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
 
+class IncomeSummary(BaseApiModel):
+    period: str 
+    total_income: float
+    income_count: int 
+    average_income: float 
+    categories: List[CategoryBreakdown] 
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+
 class CategoryAggregate(BaseApiModel):
     total: Decimal = Decimal("0")
     count: int = 0
