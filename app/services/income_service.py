@@ -1,7 +1,7 @@
-from typing import Annotated
+from typing import Annotated, List
 from uuid import UUID
 from fastapi import Depends, Response, status
-from api.models.income_models import IncomeGet, IncomeCreate, IncomeUpdate
+from api.models.income_models import IncomeFilter, IncomeGet, IncomeCreate, IncomeUpdate
 from db.dao.income_dao import IncomeDao, IncomeDaoInstance
 from db.entities.types.category_type import CategoryType
 from db.entities.category_entities import Category
@@ -17,6 +17,10 @@ class IncomeService:
     async def get_income_by_id(self, income_id: UUID) -> IncomeGet:
         income = await self.dao.get_by_id(Income, income_id)
         return IncomeGet.model_validate(income)
+
+    async def get_incomes(self, current_user: User, filters: IncomeFilter) -> List[IncomeGet]:
+        incomes = await self.dao.get_filtered_incomes(current_user.id, filters)
+        return [IncomeGet.model_validate(income) for income in incomes]
     
     async def create_new_income(self, current_user: User, request: IncomeCreate) -> IncomeGet:
         category = await self.dao.get_by_id(Category, request.category_id)
