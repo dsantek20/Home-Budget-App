@@ -1,6 +1,6 @@
 from typing import Annotated
 from uuid import UUID
-from fastapi import Depends, status
+from fastapi import Depends, Response, status
 from api.models.income_models import IncomeGet, IncomeCreate, IncomeUpdate
 from db.dao.income_dao import IncomeDao, IncomeDaoInstance
 from db.entities.types.category_type import CategoryType
@@ -59,6 +59,23 @@ class IncomeService:
             await current_user.update(self.dao.session)
 
         return income_get
+    
+    async def delete_income(self, current_user: User, income_id: UUID):
+        income = await self.dao.get_by_id(Income, income_id, include_deleted=True, raise_error=False)
+        if income:
+            current_user.balance = current_user.balance - income.amount
+            await current_user.update(self.dao.session)
+            await self.dao.delete_income_by_id(income)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    
+    async def delete_income_permanently(self, current_user: User, income_id: UUID):
+        income = await self.dao.get_by_id(Income, income_id, include_deleted=True, raise_error=False)
+        if income:
+            current_user.balance = current_user.balance - income.amount
+            await current_user.update(self.dao.session)
+            await self.dao.delete_income_by_id(income, True)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 
 
 def get_income_service(dao: IncomeDaoInstance) -> IncomeService:

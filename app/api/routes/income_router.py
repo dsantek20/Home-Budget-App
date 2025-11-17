@@ -19,3 +19,11 @@ async def create_new_income(current_user: CurrentUser, request: IncomeCreate, se
 @income_router.patch("/{income_id}", response_model=IncomeGet)
 async def update_income(income_id: UUID, current_user: CurrentUser, request: IncomeUpdate, service: IncomeServiceInstance):
     return await service.update_income(current_user, income_id, request)
+
+@income_router.delete("/{income_id}")
+async def delete_income(income_id: UUID, current_user: CurrentUser, service: IncomeServiceInstance):
+    return await service.delete_income(current_user, income_id)
+
+@income_router.delete("/{income_id}/permanent")
+async def delete_income_permanently(income_id: UUID, current_user: CurrentUser, service: IncomeServiceInstance):
+    return await service.delete_income_permanently(current_user, income_id)
