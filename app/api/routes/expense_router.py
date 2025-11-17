@@ -46,8 +46,8 @@ async def create_new_expense(current_user: CurrentUser, request: ExpenseCreate, 
     return await service.create_new_expense(current_user, request)
 
 @expense_router.patch("/{expense_id}", response_model=ExpenseGet)
-async def update_expense(expense_id: UUID, request: ExpenseUpdate, service: ExpenseServiceInstance):
-    return await service.update_expense(expense_id, request)
+async def update_expense(expense_id: UUID, current_user: CurrentUser, request: ExpenseUpdate, service: ExpenseServiceInstance):
+    return await service.update_expense(current_user, expense_id, request)
 
 @expense_router.delete("/{expense_id}")
 async def delete_expense(expense_id: UUID, service: ExpenseServiceInstance):

@@ -37,6 +37,19 @@ class ExpenseDao(BaseDAO):
         result = await self.session.execute(query)
         return result.scalars().all()
 
+    async def update_expense(self, expense: Expense, update_obj) -> Expense:
+        if not expense:
+            return None
+        
+        update_data = update_obj.model_dump(exclude_unset=True)
+        
+        for key, value in update_data.items():
+            if hasattr(expense, key):
+                setattr(expense, key, value)
+        
+        await expense.update(self.session)
+        return expense
+
 def get_expense_dao(session: DatabaseSession) -> ExpenseDao:
     return ExpenseDao(session)
 

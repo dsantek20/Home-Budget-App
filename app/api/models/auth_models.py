@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Optional
 import uuid
 from pydantic import EmailStr
@@ -9,6 +10,7 @@ class UserBase(BaseApiModel):
     username: str
     first_name: str
     last_name: str
+    balance: Decimal
 
 class UserGet(UserBase):
     id: uuid.UUID
