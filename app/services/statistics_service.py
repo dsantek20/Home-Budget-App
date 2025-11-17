@@ -2,9 +2,9 @@
 from collections import defaultdict
 from datetime import date
 from decimal import Decimal
-from typing import Annotated, List, Optional
+from typing import Annotated, Dict, List, Optional
 from fastapi import Depends
-from api.models.statistics_models import Categories, CategoryAggregate, CategoryBreakdown, ExpenseSummary, FinancialOverview, IncomeSummary, TransactionSummary
+from api.models.statistics_models import CategoryAggregate, CategoryBreakdown, ExpenseSummary, FinancialOverview, IncomeSummary, TransactionSummary
 from db.entities.types.statistic_type import PeriodType
 from db.entities.income_entities import Income
 from db.entities.expense_entities import Expense
@@ -35,8 +35,8 @@ class StatisticsService:
         
         return start_date
     
-    def _group_expenses_by_category(self, expenses: List[Expense]) -> Categories:
-        by_category: Categories = defaultdict(CategoryAggregate)
+    def _group_expenses_by_category(self, expenses: List[Expense]) -> Dict[str, CategoryAggregate]:
+        by_category: Dict[str, CategoryAggregate] = defaultdict(CategoryAggregate)
 
         for exp in expenses:
             data = by_category[exp.category.name]
@@ -54,8 +54,8 @@ class StatisticsService:
 
         return by_category
     
-    def _group_incomes_by_category(self, incomes: List[Income]) -> Categories:
-        by_category: Categories = defaultdict(CategoryAggregate)
+    def _group_incomes_by_category(self, incomes: List[Income]) -> Dict[str, CategoryAggregate]:
+        by_category: Dict[str, CategoryAggregate] = defaultdict(CategoryAggregate)
 
         for income in incomes:
             data = by_category[income.category.name]
@@ -73,7 +73,7 @@ class StatisticsService:
 
         return by_category
     
-    def _build_category_breakdown(self, by_category: Categories, total_spent: Decimal) -> List[CategoryBreakdown]:
+    def _build_category_breakdown(self, by_category: Dict[str, CategoryAggregate], total_spent: Decimal) -> List[CategoryBreakdown]:
         categories = [
             CategoryBreakdown(
                 category=cat,
