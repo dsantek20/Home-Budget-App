@@ -1,0 +1,24 @@
+version: '3.8'
+
+name: home_budget_dev
+services:
+  home-budget-db:
+    image: postgres:17
+    container_name: home-budget-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: home-budget
+    ports:
+      - "5444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - home-budget
+
+volumes:
+  postgres_data:
+
+networks:
+  home-budget:
