@@ -4,7 +4,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Annotated, List, Optional
 from fastapi import Depends
-from api.models.statistics_models import Categories, CategoryAggregate, CategoryBreakdown, ExpenseSummary, IncomeSummary, TransactionSummary
+from api.models.statistics_models import Categories, CategoryAggregate, CategoryBreakdown, ExpenseSummary, FinancialOverview, IncomeSummary, TransactionSummary
 from db.entities.income_entities import Income
 from db.entities.expense_entities import Expense
 from utils.datetime_helpers import get_current_date, get_past_date
@@ -120,6 +120,28 @@ class StatisticsService:
             income_count=len(incomes),
             average_income=float(total_spent / len(incomes)) if incomes else 0,
             categories=categories,
+            start_date=start_date.isoformat() if start_date else None,
+            end_date=get_current_date().isoformat()
+        )
+
+    async def get_financial_overview(self, user: User, period: Optional[str] = None) -> FinancialOverview:
+        start_date = self._get_date_range(period)
+        
+        incomes = await self.dao.get_incomes(user.id, start_date)
+        expenses = await self.dao.get_expenses(user.id, start_date)
+        
+        total_income = sum(income.amount for income in incomes)
+        total_expenses = sum(exp.amount for exp in expenses)
+        net_balance = total_income - total_expenses
+        
+        current_balance = user.balance
+        
+        return FinancialOverview(
+            period=period or "all_time",
+            total_income=float(total_income),
+            total_expenses=float(total_expenses),
+            net_balance=float(net_balance),
+            current_account_balance=float(current_balance),
             start_date=start_date.isoformat() if start_date else None,
             end_date=get_current_date().isoformat()
         )

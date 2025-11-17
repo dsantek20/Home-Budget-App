@@ -47,3 +47,12 @@ class Categories(BaseApiModel):
     category_name: str
     category_data: CategoryAggregate
 
+class FinancialOverview(BaseApiModel):
+    period: str
+    total_income: float
+    total_expenses: float
+    net_balance: float 
+    current_account_balance: float 
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+
