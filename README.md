@@ -15,7 +15,7 @@ In case you use VSCode please follow instructions: [VSCode venv setup](https://c
 
 ### 2. Install requirements
 
-Requirements are listed in ``requirements/requirements.txt``. To install them run 
+Requirements are listed in ``requirements/requirements.txt``. To install them, run: 
 
 `pip install -r requirements/requirements.txt`
 
@@ -49,3 +49,23 @@ To set up the database, execute the following command:
 
 This starts:
   * PostgreSQL database (port 5444)
+
+### 5. Database migrations - Alembic
+Alembic is used for database migrations
+
+To apply the migrations to the database, run the following from the `app/` folder:
+``alembic upgrade head``
+
+This will apply all revisions there are to be applied  on database
+
+### 6. Run the Project
+**Using VS Code:**
+Use the prepared `launch.json` configuration: **FastAPI (Uvicorn)**
+
+**Using command line:**
+From the `app/` folder, run:
+``uvicorn app:app --reload --host 0.0.0.0 --port 8000``
+
+The app will run at `http://localhost:8000` with hot reload enabled.
+
+**API Docs:** `http://localhost:8000/docs`
