@@ -18,3 +18,9 @@ class IncomeGet(IncomeBase):
 
 class IncomeCreate(IncomeBase):
     category_id: uuid.UUID
+
+class IncomeUpdate(IncomeBase):
+    amount: Optional[Decimal] =  Field(None, gt=0, description="Income amount (must be positive)")
+    description: Optional[str] = None
+    income_date: Optional[date] = None
+    category_id: Optional[uuid.UUID] = None
