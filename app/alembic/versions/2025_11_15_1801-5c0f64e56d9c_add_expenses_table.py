@@ -20,7 +20,7 @@ def upgrade() -> None:
         sa.Column('id', sa.UUID(), nullable=False),
         sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
         sa.Column('description', sa.String(), nullable=False),
-        sa.Column('expense_date', sa.DateTime(timezone=True), nullable=False),
+        sa.Column('expense_date', sa.Date(), nullable=False),
         sa.Column('user_id', sa.UUID(), nullable=False),
         sa.Column('category_id', sa.UUID(), nullable=False),
         sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),

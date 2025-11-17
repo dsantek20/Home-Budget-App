@@ -1,5 +1,5 @@
-from sqlalchemy import UUID, Column, DateTime, ForeignKey, Numeric, String
-from utils.datetime_helpers import get_current_datetime
+from sqlalchemy import UUID, Column, Date, ForeignKey, Numeric, String
+from utils.datetime_helpers import get_current_date
 from db.entities.base_model import BaseUUIDModel
 from sqlalchemy.orm import relationship
 
@@ -9,7 +9,7 @@ class Expense(BaseUUIDModel):
 
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
     description = Column(String, nullable=False)
-    expense_date = Column(DateTime(timezone=True), default=get_current_datetime, nullable=False)
+    expense_date = Column(Date, default=get_current_date, nullable=False)
 
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user = relationship("User", back_populates="expenses", lazy="selectin")

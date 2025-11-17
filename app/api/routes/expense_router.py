@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import date
 from decimal import Decimal
 from typing import List, Optional
 from uuid import UUID
@@ -15,8 +15,8 @@ def get_expense_filters(
     category_id: Optional[UUID] = Query(None, description="Filter by category"),
     min_amount: Optional[Decimal] = Query(None, ge=0, description="Minimum amount"),
     max_amount: Optional[Decimal] = Query(None, ge=0, description="Maximum amount"),
-    start_date: Optional[datetime] = Query(None, alias="from", description="Start date"),
-    end_date: Optional[datetime] = Query(None, alias="to", description="End date"),
+    start_date: Optional[date] = Query(None, alias="from", description="Start date"),
+    end_date: Optional[date] = Query(None, alias="to", description="End date"),
     sort_by: Optional[str] = Query("expense_date", enum=["expense_date", "amount"]),
     sort_order: Optional[str] = Query("desc", enum=["asc", "desc"]),
     limit: Optional[int] = Query(None, ge=1, description="Max results")
