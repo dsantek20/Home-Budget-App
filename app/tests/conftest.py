@@ -2,6 +2,7 @@ from decimal import Decimal
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from db.entities.types.category_type import CategoryType
 from db.entities.expense_entities import Expense
 from utils.datetime_helpers import get_current_date, get_past_date
 from uuid import uuid4
@@ -75,6 +76,7 @@ async def predefined_categories(db_session):
             name="Food",
             description="Food shopping and dining",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -82,6 +84,7 @@ async def predefined_categories(db_session):
             name="Transportation",
             description="Car, fuel, public transport",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -89,6 +92,7 @@ async def predefined_categories(db_session):
             name="Housing",
             description="Rent, utilities, maintenance",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -96,6 +100,7 @@ async def predefined_categories(db_session):
             name="Healthcare",
             description="Medical expenses, insurance",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -103,6 +108,7 @@ async def predefined_categories(db_session):
             name="Entertainment",
             description="Movies, games, hobbies",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -110,6 +116,7 @@ async def predefined_categories(db_session):
             name="Shopping",
             description="Clothing, electronics, gifts",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -117,6 +124,7 @@ async def predefined_categories(db_session):
             name="Education",
             description="Courses, books, tuition",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
             user_id=None
         ),
         Category(
@@ -124,6 +132,48 @@ async def predefined_categories(db_session):
             name="Bills",
             description="Phone, internet, subscriptions",
             is_predefined=True,
+            category_type=CategoryType.EXPENSE.value,
+            user_id=None
+        ),
+        
+        Category(
+            id=uuid4(),
+            name="Salary",
+            description="Monthly salary",
+            is_predefined=True,
+            category_type=CategoryType.INCOME.value,
+            user_id=None
+        ),
+        Category(
+            id=uuid4(),
+            name="Freelance",
+            description="Freelance work income",
+            is_predefined=True,
+            category_type=CategoryType.INCOME.value,
+            user_id=None
+        ),
+        Category(
+            id=uuid4(),
+            name="Investments",
+            description="Investment returns",
+            is_predefined=True,
+            category_type=CategoryType.INCOME.value,
+            user_id=None
+        ),
+        Category(
+            id=uuid4(),
+            name="Gifts",
+            description="Money gifts received",
+            is_predefined=True,
+            category_type=CategoryType.INCOME.value,
+            user_id=None
+        ),
+        Category(
+            id=uuid4(),
+            name="Other Income",
+            description="Other sources",
+            is_predefined=True,
+            category_type=CategoryType.INCOME.value,
             user_id=None
         ),
     ]
@@ -135,6 +185,15 @@ async def predefined_categories(db_session):
         await db_session.refresh(category)
     
     return categories
+
+@pytest_asyncio.fixture
+async def expense_categories(predefined_categories):
+    return [cat for cat in predefined_categories if cat.category_type == CategoryType.EXPENSE.value]
+
+
+@pytest_asyncio.fixture
+async def income_categories(predefined_categories):
+    return [cat for cat in predefined_categories if cat.category_type == CategoryType.INCOME.value]
 
 @pytest_asyncio.fixture
 async def test_expense(db_session, test_user, predefined_categories):
