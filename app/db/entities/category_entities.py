@@ -22,6 +22,12 @@ class Category(BaseUUIDModel):
         lazy="selectin",
     )
 
+    incomes = relationship(
+        "Income",
+        back_populates="category",
+        lazy="selectin",
+    )
+
     @valid_enum(CategoryType)
     @validates("category_type")
     def validate_status(self, key, value):
