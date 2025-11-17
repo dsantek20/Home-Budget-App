@@ -32,11 +32,14 @@ class ExpenseService:
         expense = await self.dao.get_by_id(Expense, expense_id)
         old_amount = expense.amount
         expense_updated = await self.dao.update_expense(expense, request)
+        expense_get = ExpenseGet.model_validate(expense_updated)
+
         if expense_updated and request.amount and request.amount != old_amount:
             difference = request.amount - old_amount
             current_user.balance = current_user.balance - difference
             await current_user.update(self.dao.session)
-        return ExpenseGet.model_validate(expense_updated)
+            
+        return expense_get
     
     async def delete_expense(self, expense_id: UUID):
         await self.dao.delete_by_id(Expense, expense_id)
