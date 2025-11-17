@@ -2,10 +2,10 @@ from typing import AsyncGenerator
 from sqlalchemy import StaticPool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
+from app_config import get_app_config
 
-TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 test_engine = create_async_engine(
-    TEST_DATABASE_URL,
+    get_app_config().test_database_url,
     connect_args={"check_same_thread": False},
     poolclass=StaticPool
 )

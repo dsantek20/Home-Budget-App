@@ -17,6 +17,7 @@ class AppConfiguration(BaseSettings):
     jwt_secret_key: str
     jwt_algorithm: str
     jwt_expiration_hours: int
+    test_database_url: str
 
     class Config:
         file = f".env"
